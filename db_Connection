@@ -1,12 +1,21 @@
-const mongoose = require("mongoose");
-const express =require("express")
+const mongoose = require('mongoose');
+require('dotenv').config();  // Ensure dotenv is loaded at the top
 
-//const uri="mongodb://localhost:27017/TodosDB"
-const uri = process.env.DATABASE
-mongoose.connect(uri, {
-   useNewUrlParser: true,
-   useUnifiedTopology: true
-});
+const uri = process.env.DATABASE;
+
+if (!uri) {
+  console.error("MongoDB URI is missing in .env file");
+  process.exit(1);  // Exit the process if URI is not found
+}
+
+mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => {
+    console.log("MongoDB connected successfully!");
+  })
+  .catch((err) => {
+    console.error("Error connecting to MongoDB:", err);
+  });
+
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "Error connecting to db"));
 
